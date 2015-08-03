@@ -13,6 +13,9 @@ static NSString * const RMAppUUIDKey = @"RMAppUUIDKey";
 
 @implementation RMSyslogFormatter
 
+@synthesize machineName = _machineName;
+@synthesize programName = _programName;
+
 - (NSString *)formatLogMessage:(DDLogMessage *)logMessage
 {
     NSString *msg = logMessage.message;
@@ -47,17 +50,37 @@ static NSString * const RMAppUUIDKey = @"RMAppUUIDKey";
     return log;
 }
 
+-(void)setMachineName:(NSString *)machineName
+{
+    _machineName = machineName;
+}
+
 -(NSString *) machineName
 {
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleExecutableKey];
-    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleVersionKey];
+    if(!_machineName)
+    {
+        _machineName = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    }
 
-    return [@[appName, appVersion] componentsJoinedByString:@"-"];
+    return _machineName;
+}
+
+-(void)setProgramName:(NSString *)programName
+{
+    _programName = programName;
 }
 
 -(NSString *) programName
 {
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    if (!_programName)
+    {
+        NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleExecutableKey];
+        NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleVersionKey];
+
+        _programName = [@[appName, appVersion] componentsJoinedByString:@"-"];
+    }
+
+    return _programName;
 }
 
 @end

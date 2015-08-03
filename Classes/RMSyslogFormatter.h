@@ -22,4 +22,14 @@
  */
 @interface RMSyslogFormatter : NSObject <DDLogFormatter>
 
+/**
+ Some identifier for the device, defaults to a UUIDForVendor
+ */
+@property (nonatomic, copy) NSString *machineName;
+
+/**
+ Some identifier for the app, defaults to "<Bundle Executable Key>-<Bundle Version>"
+ */
+@property (nonatomic, copy) NSString *programName;
+
 @end
